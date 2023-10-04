@@ -40,30 +40,6 @@ function getYearsFromDate(birthday) {
   return age;
 }
 
-//functions for second task
-function checkUppercase(string) {
-  if (typeof string === "string" && string[0]) {
-    const isFirstLetterUppercase = string[0] !== string[0].toLowerCase();
-    return isFirstLetterUppercase;
-  }
-}
-
-function checkLowercase(string) {
-  if (typeof string === "string" && string[0]) {
-    const isFirstLetterUppercase = string[0] !== string[0].toUpperCase();
-    return isFirstLetterUppercase;
-  }
-}
-
-function checkAge(age) {
-  if (typeof age === "number") return true;
-  else {
-    return false;
-  }
-}
-
-function checkPhoneNumber(phone, country) {}
-
 // 1 task
 
 function convertRandomUserMock(usersFirst, usersSecond) {
@@ -137,17 +113,85 @@ function getValidUsers(users) {
       checkUppercase(user.city) &&
       checkUppercase(user.country) &&
       checkAge(user.age) &&
-      //   checkPhoneNumber(user.phone, user.country) &&
+      checkPhoneNumber(user.phone) &&
       user.email.includes("@")
   );
 
   return filteredUsers;
 }
 
-// const array = [1,2,3,4,5];
-// const filteredArray = array.filter(value=>value!==3)
-// filteredArray -> [1,2,4,5]
+//functions for second task
+function checkUppercase(string) {
+  if (typeof string === "string" && string[0]) {
+    const isFirstLetterUppercase = string[0] !== string[0].toLowerCase();
+    return isFirstLetterUppercase;
+  }
+}
 
-console.log(
-  getValidUsers(convertRandomUserMock(randomUserMock, additionalUsers))
-);
+function checkLowercase(string) {
+  if (typeof string === "string" && string[0]) {
+    const isFirstLetterUppercase = string[0] !== string[0].toUpperCase();
+    return isFirstLetterUppercase;
+  }
+}
+
+function checkAge(age) {
+  if (typeof age === "number") return true;
+  else {
+    return false;
+  }
+}
+
+function checkPhoneNumber(phone) {
+  if (typeof phone === "string" && (phone.includes("-") || phone.length === 10))
+    return true;
+  else {
+    return false;
+  }
+}
+
+//function for 3rd task
+
+// getFilteredUsers("Germany", "10-25", "male", true)
+
+function getFilteredUsers(country, age, gender, favorite) {
+  let users = convertRandomUserMock(randomUserMock, additionalUsers);
+
+  //country check
+
+  // function isCountryInUser(user){
+  //   if(user.country === country ) return true;
+  //   return false
+  // }or
+
+  if (country) users = users.filter((user) => user.country === country);
+
+  // (user) => user.country === country
+  // JavaScript
+
+  //age check
+  if (age && typeof age === "string") {
+    const ages = age.match(/\d+/g); //[ '10', '25' ]
+    const lowLimitAge = parseInt(ages[0]);
+    const highLimitAge = parseInt(ages[1]);
+    users = users.filter(
+      (user) => user.age >= lowLimitAge && user.age <= highLimitAge
+    );
+
+    //gender check
+    if (gender && (gender === "female" || gender === "male"))
+      users = users.filter((user) => user.gender === gender);
+
+    if (favorite !== null) users.filter((user) => user.favorite === favorite);
+
+    return users;
+  }
+}
+
+//second task
+// console.log(
+//   getValidUsers(convertRandomUserMock(randomUserMock, additionalUsers))
+// );
+
+//third task
+console.log(getFilteredUsers("Ireland", "10-65", "male", null));
