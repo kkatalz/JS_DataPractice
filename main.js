@@ -182,9 +182,39 @@ function getFilteredUsers(country, age, gender, favorite) {
     if (gender && (gender === "female" || gender === "male"))
       users = users.filter((user) => user.gender === gender);
 
+    //favorite check
     if (favorite !== null) users.filter((user) => user.favorite === favorite);
 
     return users;
+  }
+}
+
+//fourth task
+function getSortedUsers(sortProperty, sortOrder) {
+  //full_name, age, b_day, country
+
+  if (
+    sortProperty === "full_name" ||
+    sortProperty === "age" ||
+    sortProperty === "b_day" ||
+    sortProperty === "country"
+  ) {
+    let users = convertRandomUserMock(randomUserMock, additionalUsers);
+
+    // full_name: "John Doe", age: 30, b_day: "1993-05-15", country: "USA"
+    // full_name: "Jane Doe", age: 25, b_day: "1998-10-20", country: "Canada"
+
+    function compareFunction(a, b) {
+      if (b[sortProperty] < a[sortProperty]) {
+        return sortOrder === "asc" ? 1 : -1;
+      }
+      if (a[sortProperty] < b[sortProperty]) {
+        return sortOrder === "asc" ? -1 : 1;
+      }
+      return 0;
+    }
+
+    return users.sort(compareFunction);
   }
 }
 
@@ -194,4 +224,13 @@ function getFilteredUsers(country, age, gender, favorite) {
 // );
 
 //third task
-console.log(getFilteredUsers("Ireland", "10-65", "male", null));
+//console.log(getFilteredUsers("Ireland", "10-65", "male", null));
+
+//  4th
+console.log(getSortedUsers("full_name", "asc"));
+
+// const user = {
+//   name: "Zlata",
+// };
+
+// console.log(user.name);
