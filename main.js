@@ -218,19 +218,41 @@ function getSortedUsers(sortProperty, sortOrder) {
   }
 }
 
-//second task
+//fifth task
+function getUserByParameter(searchProperty, value) {
+  //name, note, age.
+  if (
+    searchProperty === "full_name" ||
+    searchProperty === "age" ||
+    searchProperty === "note"
+  ) {
+    let users = convertRandomUserMock(randomUserMock, additionalUsers);
+    const searchedUser = users.find((user) =>
+      typeof value === "string"
+        ? user[searchProperty].includes(value)
+        : user[searchProperty] === value
+    );
+
+    return searchedUser;
+  }
+}
+
+//2nd task
 // console.log(
 //   getValidUsers(convertRandomUserMock(randomUserMock, additionalUsers))
 // );
 
-//third task
+//3rd task
 //console.log(getFilteredUsers("Ireland", "10-65", "male", null));
 
 //  4th
-console.log(getSortedUsers("full_name", "asc"));
+//console.log(getSortedUsers("full_name", "asc"));
+
+//5th task
+console.log(getUserByParameter("age", 65));
 
 // const user = {
-//   name: "Zlata",
+//   full_name: "Norbert Weishaupt",
 // };
 
 // console.log(user.name);
