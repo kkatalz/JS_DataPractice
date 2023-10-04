@@ -15,8 +15,7 @@ const courses = [
   "Statistics",
 ];
 
-// Lab2 code
-
+//1st task
 function getRandomCourse() {
   const randomIndex = Math.floor(Math.random() * courses.length);
 
@@ -39,8 +38,6 @@ function getYearsFromDate(birthday) {
 
   return age;
 }
-
-// 1 task
 
 function convertRandomUserMock(usersFirst, usersSecond) {
   const mappedRandomUsers = usersFirst.map((user) => {
@@ -170,26 +167,30 @@ function getFilteredUsers(country, age, gender, favorite) {
   // JavaScript
 
   //age check
-  if (age && typeof age === "string") {
-    const ages = age.match(/\d+/g); //[ '10', '25' ]
-    const lowLimitAge = parseInt(ages[0]);
-    const highLimitAge = parseInt(ages[1]);
-    users = users.filter(
-      (user) => user.age >= lowLimitAge && user.age <= highLimitAge
-    );
-
-    //gender check
-    if (gender && (gender === "female" || gender === "male"))
-      users = users.filter((user) => user.gender === gender);
-
-    //favorite check
-    if (favorite !== null) users.filter((user) => user.favorite === favorite);
-
-    return users;
+  if (age) {
+    if (typeof age === "string") {
+      const ages = age.match(/\d+/g); //[ '10', '25' ]
+      const lowLimitAge = parseInt(ages[0]);
+      const highLimitAge = parseInt(ages[1]);
+      users = users.filter(
+        (user) => user.age >= lowLimitAge && user.age <= highLimitAge
+      );
+    } else {
+      users = users.filter((user) => user.age === age);
+    }
   }
+
+  //gender check
+  if (gender && (gender === "female" || gender === "male"))
+    users = users.filter((user) => user.gender === gender);
+
+  //favorite check
+  if (favorite !== null) users.filter((user) => user.favorite === favorite);
+
+  return users;
 }
 
-//fourth task
+//4th task
 function getSortedUsers(sortProperty, sortOrder) {
   //full_name, age, b_day, country
 
@@ -218,7 +219,7 @@ function getSortedUsers(sortProperty, sortOrder) {
   }
 }
 
-//fifth task
+//5th task
 function getUserByParameter(searchProperty, value) {
   //name, note, age.
   if (
@@ -226,33 +227,108 @@ function getUserByParameter(searchProperty, value) {
     searchProperty === "age" ||
     searchProperty === "note"
   ) {
-    let users = convertRandomUserMock(randomUserMock, additionalUsers);
-    const searchedUser = users.find((user) =>
+    getUserByAnyParameter(searchProperty, value);
+  }
+}
+
+function getUserByAnyParameter(searchProperty, value) {
+  let users = convertRandomUserMock(randomUserMock, additionalUsers);
+
+  if (searchProperty === "age" && typeof value === "string") {
+    const ages = value.match(/\d+/g); //[ '10', '25' ]
+    const lowLimitAge = parseInt(ages[0]);
+    const highLimitAge = parseInt(ages[1]);
+    return users.find(
+      (user) =>
+        user[searchProperty] > lowLimitAge &&
+        user[searchProperty] < highLimitAge
+    );
+  }
+
+  const searchedUser = users.find((user) =>
+    typeof value === "string"
+      ? user[searchProperty].includes(value)
+      : user[searchProperty] === value
+  );
+
+  return searchedUser;
+}
+
+//6th task
+function getUserPercentage(searchProperty, value) {
+  let users = convertRandomUserMock(randomUserMock, additionalUsers);
+  const amountOfUsers = users.length;
+  let searchedUsers = [];
+
+  if (searchProperty === "age" && typeof value === "string") {
+    const ages = value.match(/\d+/g); //[ '10', '25' ]
+
+    // "10-25" -> ["10", "25"]
+    // "10-" -> ["10"]
+    // "-25" -> ["25"]
+    if (ages.length === 1) {
+      //age = "-10"
+      if (value[0] === "-") {
+        const highLimitAge = parseInt(ages[0]);
+
+        searchedUsers = users.filter(
+          (user) => user[searchProperty] < highLimitAge
+        );
+
+        //age= 10-
+      } else if (value[0] !== "-") {
+        const lowLimitAge = parseInt(ages[0]);
+
+        searchedUsers = users.filter(
+          (user) => user[searchProperty] > lowLimitAge
+        );
+      }
+    }
+
+    //age = "10-75 "
+    else {
+      const lowLimitAge = parseInt(ages[0]);
+      const highLimitAge = parseInt(ages[1]);
+      searchedUsers = users.filter(
+        (user) =>
+          user[searchProperty] > lowLimitAge &&
+          user[searchProperty] < highLimitAge
+      );
+    }
+
+    //when "age" is number
+  } else {
+    searchedUsers = users.filter((user) =>
       typeof value === "string"
         ? user[searchProperty].includes(value)
         : user[searchProperty] === value
     );
-
-    return searchedUser;
   }
+  const percentage = (searchedUsers.length * 100) / amountOfUsers;
+
+  return `${percentage.toFixed(2)} %`;
 }
 
-//2nd task
+console.log("\n");
+
+//    1st task
+//console.log(convertRandomUserMock(randomUserMock, additionalUsers));
+
+//    2nd task
 // console.log(
 //   getValidUsers(convertRandomUserMock(randomUserMock, additionalUsers))
 // );
 
-//3rd task
-//console.log(getFilteredUsers("Ireland", "10-65", "male", null));
+//    3rd task logical AND
+console.log(getFilteredUsers("Germany", 65, "male", null));
 
-//  4th
+//    4th logical OR
 //console.log(getSortedUsers("full_name", "asc"));
 
-//5th task
-console.log(getUserByParameter("age", 65));
+//    5th task
+//console.log(getUserByParameter("age", 65));
 
-// const user = {
-//   full_name: "Norbert Weishaupt",
-// };
+//6th task
+//console.log(getUserPercentage("age", "65"));
 
-// console.log(user.name);
+console.log("\n");
